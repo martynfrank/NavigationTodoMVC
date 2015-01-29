@@ -120,12 +120,16 @@
     <Compile Include="App_Start\FluentStateInfoConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\TodoController.cs" />
+    <Compile Include="Data\TodoDto.cs" />
+    <Compile Include="Data\TodoRepository.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\ModeEnum.cs" />
     <Compile Include="Models\Todo.cs" />
     <Compile Include="Models\TodoModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service\TodoModule.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\web.config" />

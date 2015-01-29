@@ -1,30 +1,23 @@
-﻿using Navigation;
-using NavigationTodoMVC.Models;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web.Mvc;
-
+﻿
 namespace NavigationTodoMVC.Controllers
 {
-	/// <summary>
+    using System.Web.Mvc;
+    using Data;
+    using Navigation;
+    using NavigationTodoMVC.Models;
+    using Service;
+
+    /// <summary>
 	/// Todo maintenance Controller.
 	/// </summary>
     public class TodoController : Controller
     {
-		private static int Id = 1;
+        private readonly TodoModule _todoModule;
 
-		/// <summary>
-		/// Store the Todos in Session.
-		/// </summary>
-		private List<Todo> Todos
-		{
-			get
-			{
-				if (Session["todos"] == null)
-					Session["todos"] = new List<Todo>();
-				return (List<Todo>) Session["todos"];
-			}
-		}
+	    public TodoController()
+	    {
+	        _todoModule = new TodoModule(new TodoRepository());
+	    }
 
 		/// <summary>
 		/// To keep finely-grained Actions in a server-rendered progressively enhanced
@@ -45,12 +38,14 @@ namespace NavigationTodoMVC.Controllers
 		[ChildActionOnly]
 		public ActionResult _Content(string mode)
 		{
-			var model = new TodoModel { Todos = Todos };
-			model.ItemsLeft = model.Todos.Count(t => !t.Completed);
-			model.CompletedCount = model.Todos.Count(t => t.Completed);
-			if (mode != "all")
-				model.Todos = model.Todos.Where(t => t.Completed == (mode == "completed"));
-			return View(model);
+		    var modeEnum = mode == "complete" ? StatusEnum.Complete : mode == "active" ? StatusEnum.Active : StatusEnum.All;
+            var todos = _todoModule.Get(modeEnum);
+		    return View(new TodoModel
+		    {
+		        Todos = todos.Todos,
+		        ItemsLeft = todos.ItemsLeft,
+		        CompletedCount = todos.CompletedCount
+		    });
 		}
 
 		/// <summary>
@@ -65,11 +60,7 @@ namespace NavigationTodoMVC.Controllers
 			if (!string.IsNullOrWhiteSpace(todoModel.NewTitle))
 			{
 				StateContext.Bag.id = null;
-				var todo = new Todo {
-					Id = Id++,
-					Title = todoModel.NewTitle.Trim()
-				};
-				Todos.Add(todo);
+			    var todo =_todoModule.Add(todoModel.NewTitle);
 				HttpContext.Items["todoId"] = todo.Id;
 			}
 			return View();
@@ -86,17 +77,15 @@ namespace NavigationTodoMVC.Controllers
 		public ActionResult Edit(Todo todo, bool cancel = false)
 		{
 			StateContext.Bag.id = null;
-			var title = todo.Title;
-			todo = Todos.FirstOrDefault(t => t.Id == todo.Id);
-			if (todo != null && !cancel)
+			if (!cancel)
 			{
-				if (!string.IsNullOrWhiteSpace(title))
+                if (!string.IsNullOrWhiteSpace(todo.Title))
 				{
 					HttpContext.Items["edit"] = true;
-					todo.Title = title.Trim();
+				    _todoModule.Update(todo);
 				}
 				else
-					Todos.Remove(todo);
+                    _todoModule.Remove(todo.Id);
 			} 
 			return View();
 		}
@@ -113,9 +102,8 @@ namespace NavigationTodoMVC.Controllers
 		{
 			HttpContext.Items["todoId"] = StateContext.Bag.id;
 			StateContext.Bag.id = null;
-			todo = Todos.FirstOrDefault(t => t.Id == todo.Id);
-			if (todo != null)
-				todo.Completed = complete;
+            todo.Completed = complete;
+            _todoModule.Update(todo);
 			return View();
 		}
 
@@ -129,9 +117,7 @@ namespace NavigationTodoMVC.Controllers
 		public ActionResult Delete(Todo todo)
 		{
 			HttpContext.Items["todoId"] = StateContext.Bag.id;
-			todo = Todos.FirstOrDefault(t => t.Id == todo.Id);
-			if (todo != null)
-				Todos.Remove(todo);
+			_todoModule.Remove(todo.Id);
 			return View();
 		}
 
@@ -146,7 +132,11 @@ namespace NavigationTodoMVC.Controllers
 		{
 			HttpContext.Items["refresh"] = true;
 			StateContext.Bag.id = null;
-			Todos.ForEach(t => t.Completed = complete);
+            foreach (var todo in _todoModule.Get(StatusEnum.All).Todos)
+            {
+                todo.Completed = complete;
+                _todoModule.Update(todo);
+            }
 			return View();
 		}
 
@@ -160,8 +150,7 @@ namespace NavigationTodoMVC.Controllers
 		{
 			HttpContext.Items["refresh"] = true;
 			StateContext.Bag.id = null;
-			var completed = Todos.Where(t => t.Completed).ToList();
-			completed.ForEach(t => Todos.Remove(t));
+			_todoModule.RemoveComplete();
 			return View();
 		}
 	}
