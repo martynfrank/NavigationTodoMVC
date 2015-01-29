@@ -1,7 +1,7 @@
 ﻿
 namespace NavigationTodoMVC.Models
 {
-    public enum ModeEnum
+    public enum StatusEnum
     {
         All,
         Complete,
