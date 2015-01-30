@@ -6,7 +6,7 @@ namespace NavigationTodoMVC.Data
     using System.Web;
     using Models;
 
-    public class TodoRepository
+    public class TodoRepository : ITodoRepository
     {
         private readonly HttpContext _context = HttpContext.Current;
 

@@ -120,6 +120,7 @@
     <Compile Include="App_Start\FluentStateInfoConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\TodoController.cs" />
+    <Compile Include="Data\ITodoRepository.cs" />
     <Compile Include="Data\TodoDto.cs" />
     <Compile Include="Data\TodoRepository.cs" />
     <Compile Include="Global.asax.cs">

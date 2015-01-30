@@ -7,8 +7,8 @@ namespace NavigationTodoMVC.Service
 
     public class TodoModule
     {
-        private readonly TodoRepository _todoRepository;
-        public TodoModule(TodoRepository todoRepository)
+        private readonly ITodoRepository _todoRepository;
+        public TodoModule(ITodoRepository todoRepository)
         {
             _todoRepository = todoRepository;
         }

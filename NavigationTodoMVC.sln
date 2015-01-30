@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{39ED30
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NavigationTodoMVC.Tests", "NavigationTodoMVC.Tests\NavigationTodoMVC.Tests.csproj", "{0D6092B7-1FA6-49A1-ABEF-A8460091BD7A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -22,6 +24,10 @@ Global
 		{6D49B570-B8DD-4F71-8764-60D5EA1F0E77}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6D49B570-B8DD-4F71-8764-60D5EA1F0E77}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6D49B570-B8DD-4F71-8764-60D5EA1F0E77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D6092B7-1FA6-49A1-ABEF-A8460091BD7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D6092B7-1FA6-49A1-ABEF-A8460091BD7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D6092B7-1FA6-49A1-ABEF-A8460091BD7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D6092B7-1FA6-49A1-ABEF-A8460091BD7A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
